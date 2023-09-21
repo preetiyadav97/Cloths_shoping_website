@@ -1,0 +1,44 @@
+{% extends 'nav.html' %}
+{% block title %}Login {% endblock %}
+{% block CSS %}
+        <link rel="stylesheet" href="/static/assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="/static/assets/css/style.css">
+
+{% endblock  %}
+{% block body %}
+
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		
+
+
+		<div class="wrapper" style="background-image: url('images/bg-registration-form-1.jpg');">
+			<div class="inner">
+				<div class="image-holder">
+					<img src="/static/assets/images/registration-form-1.jpg" alt="">
+				</div>
+				<form action=""  method="POST">
+				    {% csrf_token %}
+					<h3>Log In </h3>
+					
+					<div class="form-wrapper">
+						<input type="text" placeholder="Username"  id="loginusername" name="loginusername" class="form-control">
+						<i class="zmdi zmdi-account"></i>
+					</div>
+					
+					
+					<div class="form-wrapper">
+						<input type="passward" placeholder="Password"  id="loginpassword" name="loginpassword" class="form-control">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					
+					<button>submit
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+		
+{% endblock %}

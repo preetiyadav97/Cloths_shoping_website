@@ -1,0 +1,210 @@
+
+{% extends 'nav.html' %}
+{% load static %}
+{% block title %}single-product{% endblock %}
+{% block body %}
+
+    <!-- ***** Main Banner Area Start ***** -->
+    <div class="page-heading" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-content">
+                        <h2>Single Product Page</h2>
+                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Main Banner Area End ***** -->
+
+
+    <!-- ***** Product Area Starts ***** -->
+    <section class="section" id="product">
+        <div class="container " >
+          {% for i in dat %}
+            <div class="row">
+                <div class="col-lg-8">
+                <div class="left-images">
+                    <img src="{{i.product.image.url}}" alt="">
+                    <!-- <img src="/static/assets/images/single-product-02.jpg" alt=""> -->
+                </div>
+            </div>
+           
+            <div class="col-lg-4  product_data">
+                <div class="right-content">
+                  
+                    <h4>{{i.product.name}}</h4>
+
+                    <span class="price"><b>${{i.product.price}}</b></span>
+                    <ul class="stars">
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                    </ul>
+                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod kon tempor incididunt ut labore.</span>
+                    <div class="quote">
+                        <i class="fa fa-quote-left"></i><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiuski smod.</p>
+                    </div>
+              
+                   
+                        <div class="quantity-content ">
+                            <div class="left-content">
+                                <h6>No. of Orders</h6>
+                            </div>
+                            <div class="right-content">
+                                <div class="quantity buttons_added">
+                                    
+                                    <form action="" method="POST">  
+                                        {% csrf_token %}
+                                        <select class="form-control" name="qty" id="qty" value= {{get_item.quantity}} >
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value= "4">4</option>
+                                        </select>
+                                          <!-- <input class="main-border-button" type="submit" value="Buy"/><a href="{% url "total" i.id %}"></a> -->                              
+                                            <!-- <button class="main-border-button"><a href="{% url "total" i.id %}">Buy</a><button> --> 
+                                        
+
+                                    </form>
+                                
+                                    <br>
+                                    
+                                    <button class ="input-group-text decrement-btn "><a href="{% url "remove" i.id %}">Remove</a></button>
+                                
+                                    
+                                
+                                </div>
+                           </div>
+                        </div>
+                       
+                 
+                </div>
+            </div>
+         {% endfor %} 
+        </div>
+    </section>
+   
+    
+
+    
+  
+    <aside class="col-lg-30">
+        <div class="card mb-3">
+            <div class="card-body">
+                <form>
+                    <div class="form-group"> <label>Have coupon?</label>
+                        <div class="input-group"> <input type="text" class="form-control coupon" name="" placeholder="Coupon code"> <span class="input-group-append"> <button class="btn btn-primary btn-apply coupon">Apply</button> </span> </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+       
+          
+                <dl class="dlist-align">
+                    <dt>Total price:</dt>
+                    <dd class="text-right ml-3"><b>₹{{total_price}}</b></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Discount:</dt>
+                    <dd class="text-right text-danger ml-3">- $10.00</dd>
+                </dl>
+                <dl class="dlist-align"> 
+                    <dt>Total:</dt>
+                    <dd class="text-right text-dark b ml-3"><strong>$59.97</strong></dd>
+                </dl>
+                <hr>
+                
+                <button id="rzp-button1" class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Make Purchase </button>
+
+                <a href="#" class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
+       
+            </div>
+        </div>
+    </aside>
+    <!-- ***** Product Area Ends ***** -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        var options = {
+            "key": "rzp_test_k4rElzvZ4GMbO8", // Enter the Key ID generated from the Dashboard
+            "amount": " {{razorpay_order.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Shopping",
+            "description": "Purchases",
+            "image": "https://example.com/your_logo",
+            "order_id": " {{razorpay_order.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response){
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+        });
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        </script>
+
+
+    {% comment %} <form method="POST">
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+        var options = {
+            key: "{{razorpay_key}}",
+            amount: "{{order.amount}}", 
+            currency: "INR",
+            name: "{{order.name}}",
+            description: "Test Transaction",
+            image: "https://imgur.com/NOWiBu9",
+            order_id: "{{order.provider_order_id}}",
+            callback_url: "{{callback_url}}",
+            redirect: true,
+            prefill: {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+        </script>
+        <input type="hidden" custom="Hidden Element" name="hidden">
+    </form> {% endcomment %}
+    <script src="{% static '/js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static '/js/button.js' %}"></script>
+    
+{% endblock %}

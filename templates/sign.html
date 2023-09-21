@@ -1,0 +1,55 @@
+{% extends 'nav.html' %}
+{% block title %}Sign Up{% endblock %}
+{% block CSS %}
+<!-- MATERIAL DESIGN ICONIC FONT -->
+<link rel="stylesheet" href="/static/assets/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+<!-- STYLE CSS -->
+<link rel="stylesheet" href="/static/assets/css/style.css">
+{% endblock %}
+{% block body %}
+		<div class="wrapper" style="background-image: url('images/bg-registration-form-1.jpg');">
+			<div class="inner">
+				<div class="image-holder">
+					<img src="/static/assets/images/registration-form-1.jpg" alt="">
+				</div>
+				<form action="" method ="POST">
+				    {% csrf_token %}
+					<h3>Registration Form</h3>
+					<div class="form-group">
+						<input type="text" placeholder="First Name"  id="fname" name="fname" class="form-control">
+						<input type="text" placeholder="Last Name" id="lname" name="lname" class="form-control">
+					</div>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Username"  id="username" name="username" class="form-control">
+						<i class="zmdi zmdi-account"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Email Address"  id="email" name="email" class="form-control">
+						<i class="zmdi zmdi-email"></i>
+					</div>
+					<div class="form-wrapper">
+						<select name="gender" id="gender" class="form-control">
+							<option value="" disabled selected>Gender</option>
+							<option value="male">Male</option>
+							<option value="femal">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="password" placeholder="password"  id="password" name="password" class="form-control">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="passward" placeholder="Confirm password"  id="confirmpassword" name="confirmpassword" class="form-control">
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<button>Register
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+		
+{% endblock %}
