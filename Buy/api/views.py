@@ -1,16 +1,25 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from Buy.models import  Product,Contact,Cart
-from .serializers import ProductSerializer,ContactSerializer,CartSerializer,UserSerializer
+from .serializers import ProductSerializer,ContactSerializer,CartSerializer,UserSerializer,LoginSerializer
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-
-
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import  permissions
 class Index(APIView):
+    Serializer_classes=ProductSerializer
+    permission_classes = (AllowAny,)
+
     def get(self,request,*args, **kwargs):
+        
         try:
             man_products=Product.objects.filter(cat__name="Men")
             woman_products=Product.objects.filter(cat__name="women's")
@@ -59,40 +68,31 @@ class UserDetailAPI(APIView):
         usernames = [user.username for user in User.objects.all()]
         return Response(usernames)
     
-
-
+    
 class LoginView(APIView):
-    def post(self, request,*args, **kwargs):
+    def post(self, request, *args, **kwargs):
         try:
             data = request.data
-
-            username = data["username"]
-            print(username)
+            username = data['username']
+            password = data['password']
             
-            password =data['password']
-            print(password)
-            print("==============================================")
+            
             user = authenticate(username=username, password=password)
-            print(user)
-            print("==============================================")
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
             
-            if user is not None:
-                context =  {
-                'success':True,
-                "status":status.HTTP_200_OK,
-                'response':f"successfully login {user}"
-                }
-            
-                return Response(context)
-
-            
-
+            return Response( {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        
         except Exception as e:
-            context =  {
-                'success':False,
-                "status":status.HTTP_400_BAD_REQUEST,
-                'response':str(e)
-                }
+            context = {
+                'success': False,
+                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'response': str(e)
+            }
             
-            return Response(context)
-    
+            return Response(context, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
